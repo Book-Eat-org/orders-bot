@@ -1,0 +1,36 @@
+networks:
+  def_netw:
+    driver: bridge
+
+services:
+  web_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    ports:
+      - "8000:8000"
+    environment:
+      BOT: 7619801086:AAEF0owPILwMnUPG4dOtXW_heXJD7OfSFEA
+      EXTERNAL_API_URL: https://book-eat-test.ru/book-eat/api/
+      EXTERNAL_API_CHECK_ACCESS: https://book-eat-test.ru/book-eat/api/v1/users/check-for-bot
+    volumes:
+      - .:/app
+    networks:
+      - def_netw
+
+  bot_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    environment:
+      BOT: 7619801086:AAEF0owPILwMnUPG4dOtXW_heXJD7OfSFEA
+      EXTERNAL_API_URL: https://book-eat-test.ru/book-eat/api/
+      EXTERNAL_API_CHECK_ACCESS: https://book-eat-test.ru/book-eat/api/v1/users/check-for-bot
+    volumes:
+      - .:/app
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    networks:
+      - def_netw

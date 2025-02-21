@@ -48,13 +48,13 @@ EXTERNAL_API_CHECK_ACCESS=http://web_app:8000/v1/check_access
 Чтобы развернуть тестовый API и бота в одной локальной сети, используйте следующую команду:  
   
 ```sh  
-docker compose -f docker-compose_local.yml up -d
+docker compose -f docker-compose-local.yml up -d
 ```
 
 ### Запуск только бота:  
   
 ```sh  
-docker compose -f docker-compose_bot.yml up -d
+docker compose -f docker-compose-bot.yml up -d
 ```  
 ### Эндпоинты тестового API  
   
