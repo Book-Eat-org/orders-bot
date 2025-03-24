@@ -1,18 +1,13 @@
+import os
 from functools import cache as cache_func
-from pydantic import Field
 
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    BOT: str = Field(..., env="BOT")
-    EXTERNAL_API_URL: str = Field("http://web_app:8000/", env="EXTERNAL_API_URL")
-    EXTERNAL_API_CHECK_ACCESS: str = Field(
-        "http://web_app:8000/v1/check_access", env="EXTERNAL_API_CHECK_ACCESS"
-    )
-
-    class Config:
-        env_file = ".env"
+    BOT: str = os.environ.get('BOT_API_TOKEN')
+    EXTERNAL_API_URL: str = os.environ.get('EXTERNAL_API_URL')
+    EXTERNAL_API_CHECK_ACCESS: str = os.environ.get('EXTERNAL_API_CHECK_ACCESS')
 
 
 @cache_func

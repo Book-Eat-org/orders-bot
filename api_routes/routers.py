@@ -1,13 +1,12 @@
 import json
 
+import aiohttp
 from dotenv import load_dotenv
 from fastapi import APIRouter, Query
 
-import aiohttp
-
-from api_routes.py_models import EditChatRequest, InputData, SendChatRequest
-from src.core.settings import settings
 from api_routes.parse_utills import parse_order_message
+from api_routes.py_models import InputData
+from src.core.settings import settings
 
 load_dotenv()
 bot_token = settings.BOT
