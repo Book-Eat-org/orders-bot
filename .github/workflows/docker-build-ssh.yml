@@ -1,0 +1,27 @@
+name: Build Docker Image (Bot)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Debug Params
+        run: |
+          echo "------DOCKER-------"
+          echo "DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}"
+          echo "DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}"
+
+      - name: Build & Push Docker Image App
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          image: verixas/book-eat-orders-bot
+          dockerfile: Dockerfile
+          tags: latest
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
