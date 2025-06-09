@@ -1,20 +1,17 @@
 import json
 
 import aiohttp
-from dotenv import load_dotenv
 from fastapi import APIRouter, Query
 
-from api_routes.parse_utills import parse_order_message
-from api_routes.py_models import InputData
-from src.core.settings import settings
+from src.app.api.utils.parse_utills import parse_order_message
+from src.app.api.models.bot_models import InputData
+from src.app.settings import settings
 
-load_dotenv()
 bot_token = settings.BOT
-url = settings.EXTERNAL_API_URL
-router = APIRouter(prefix="/book-eat/api/v1", tags=["test API endpoints"])
+book_eat_router = APIRouter(prefix="/book-eat/api/v1", tags=["test API endpoints"])
 
 
-@router.put("/orders/{order_id}/status")
+@book_eat_router.put("/orders/{order_id}/status")
 async def update_order_status(
     order_id: str,
     status: str = Query(
@@ -26,7 +23,7 @@ async def update_order_status(
     return {"message": f"запрос по  id {order_id} получили, статус : {status}"}
 
 
-@router.post("/check_access")
+@book_eat_router.post("/check_access")
 async def send_from_telegram(data: InputData):
     print(data)
     numbers = ["12345", "43213", "22333"]
@@ -36,10 +33,9 @@ async def send_from_telegram(data: InputData):
     return {"authorized": False}
 
 
-@router.post("/send_chat")
+@book_eat_router.post("/send_chat")
 async def send_to_telegram(dict_data: dict):
     telegram_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
-    # dict_data = data.dict()
     try:
         if (
             not isinstance(dict_data, dict)
@@ -136,7 +132,7 @@ async def send_to_telegram(dict_data: dict):
         return {"status": 500, "message": f"An error occurred: {str(e)}"}
 
 
-@router.delete("/delete_message")
+@book_eat_router.delete("/delete_message")
 async def delete_telegram_message(chat_id: int, message_id: int):
     telegram_url = f"https://api.telegram.org/bot{bot_token}/deleteMessage"
     payload = {
@@ -169,10 +165,9 @@ async def delete_telegram_message(chat_id: int, message_id: int):
         return {"status": 500, "message": f"An error occurred: {str(e)}"}
 
 
-@router.post("/edit_chat")
+@book_eat_router.post("/edit_chat")
 async def edit_message(dict_data: dict):
     telegram_url = f"https://api.telegram.org/bot{bot_token}/editMessageText"
-    # dict_data = data.dict()
     try:
         if (
             not isinstance(dict_data, dict)
