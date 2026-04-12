@@ -45,6 +45,7 @@ class OrderMessage(BaseModel):
     comment: Optional[str] = None
     personsCount: int
     totalCost: float
+    promoCodeDiscount: float
     readyTime: str
     createdAt: str
     customerInfo: CustomerInfo

@@ -153,6 +153,7 @@ def parse_order_message(message_data: dict):
         f"🛒 Состав заказа:\n"
         f"{products_text}\n"
         f"{delivery_price_text}"
+        f"➗ Скидка по промокоду: {message_data['promoCodeDiscount']} ₽\n"
         f"💰 Итого: {message_data['totalCost']} ₽"
     )
 
