@@ -1,17 +1,22 @@
 from urllib.parse import urlencode, urljoin
 
 import aiohttp
+import logging
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram import Bot, Dispatcher, types
+from aiogram.client.session.aiohttp import AiohttpSession
 
 from src.app.settings import settings
 from src.app.api.routers.telegram_bot_routers import telegram_router
 
+session = None
+if settings.PROXY_URL:
+    session = AiohttpSession(proxy=settings.PROXY_URL)
+    logging.info(f"Using proxy: {settings.PROXY_URL}")
+bot_token = settings.BOT
+telegram_bot = Bot(token=bot_token, session=session)
 
 external_api_url = settings.EXTERNAL_API_URL
-bot_token = settings.BOT
-telegram_bot = Bot(token=bot_token)
-
 telegram_bot_dispatcher = Dispatcher(storage=MemoryStorage())
 telegram_bot_dispatcher.include_router(telegram_router)
 
