@@ -1,6 +1,7 @@
 import json
 
 import aiohttp
+from aiohttp_socks import ProxyConnector
 from fastapi import APIRouter, Query
 
 from src.app.api.utils.parse_utills import parse_order_message
@@ -8,6 +9,11 @@ from src.app.api.models.bot_models import InputData
 from src.app.settings import settings
 
 bot_token = settings.BOT
+
+# Сессия для запросов к Telegram через SOCKS-прокси (как у aiogram).
+def telegram_session() -> aiohttp.ClientSession:
+    return aiohttp.ClientSession(connector=ProxyConnector.from_url(settings.PROXY_URL))
+
 book_eat_router = APIRouter(prefix="/book-eat/api/v1", tags=["test API endpoints"])
 
 
@@ -25,10 +31,8 @@ async def update_order_status(
 
 @book_eat_router.post("/check_access")
 async def send_from_telegram(data: InputData):
-    print(data)
     numbers = ["12345", "43213", "22333"]
     if data.phone_number in numbers:
-        print(f"пользователь с user_id:{data.user_id}")
         return {"authorized": True}
     return {"authorized": False}
 
@@ -111,7 +115,7 @@ async def send_to_telegram(dict_data: dict):
             payload["reply_markup"] = json.dumps(inline_keyboard)
 
         # Отправка сообщения в Telegram
-        async with aiohttp.ClientSession() as session:
+        async with telegram_session() as session:
             async with session.post(telegram_url, json=payload) as response:
                 if response.status == 200:
                     response_data = await response.json()
@@ -140,7 +144,7 @@ async def delete_telegram_message(chat_id: int, message_id: int):
         "message_id": message_id,
     }
     try:
-        async with aiohttp.ClientSession() as session:
+        async with telegram_session() as session:
             async with session.post(telegram_url, data=payload) as response:
                 if response.status == 200:
                     response_data = await response.json()
@@ -234,7 +238,7 @@ async def edit_message(dict_data: dict):
         }
         if inline_keyboard:
             payload["reply_markup"] = json.dumps(inline_keyboard)
-        async with aiohttp.ClientSession() as session:
+        async with telegram_session() as session:
             async with session.post(telegram_url, data=payload) as response:
                 if response.status == 200:
                     response_data = await response.json()
