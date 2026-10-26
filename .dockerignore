@@ -1,0 +1,19 @@
+# VCS — содержит http.extraheader с токеном после actions/checkout
+.git
+.gitignore
+.github
+
+# Secrets & local envs
+.env
+__pycache__
+*.py[cod]
+.pytest_cache
+
+# IDE / assistant
+.idea
+.claude
+.DS_Store
+
+# Not needed in runtime image
+docker-compose-local.yml
+README.md
